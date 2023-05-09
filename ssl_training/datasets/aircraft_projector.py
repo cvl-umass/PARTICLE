@@ -5,13 +5,12 @@ import torch.nn as nn
 import torch.utils.data
 import torchvision.transforms
 from torch.utils.data import Dataset
-# import torchvision.transforms.InterpolationMode as InterpolationMode
 import torchfile
 import random
 from PIL import Image
 import numpy as np
 
-im_dir = '/work/osaha_umass_edu/oid-aircraft-beta-1/data/images/aeroplane'
+im_dir = '../data_dir/oid-aircraft-beta-1/data/images/aeroplane/'
 
 resnet_transform = torchvision.transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
@@ -22,7 +21,7 @@ class OIDDatasetProj(Dataset):
             self,
             img_size=(224, 224),
     ):  
-        with open("/work/osaha_umass_edu/oid-aircraft-beta-1/train_oid_coarse.txt", 'r') as f:
+        with open("./anno/train_oid.txt", 'r') as f:
             x = f.readlines()
         self.img_path_list = []
         for name in x:
@@ -45,16 +44,7 @@ class OIDDatasetProj(Dataset):
         return im1, im_path.split('/')[-1]
 
     def transform(self, img):
-        # im_shape = (int(img.size[1]*0.975), int(img.size[0]*0.975)) #(min(int(img.size[0]*0.99), int(img.size[1]*0.99)), min(int(img.size[0]*0.99), int(img.size[1]*0.99)))
-        # img = torchvision.transforms.CenterCrop(im_shape)(img)
         img = img.resize(self.img_size)  
-
-        # img = torchvision.transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.2, hue=0.1)(img)
-
-        # img = torchvision.transforms.GaussianBlur(kernel_size=23, sigma=(0.1, 2.0))(img)
-
-        # img = torchvision.transforms.RandomSolarize(threshold=0.5, p=1)(img)
-
         img = torchvision.transforms.ToTensor()(img)   
         img = resnet_transform(img)
         return img

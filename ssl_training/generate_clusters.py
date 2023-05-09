@@ -6,8 +6,8 @@ import argparse
 import torch
 import torch.nn as nn
 
-from utils.utils import AverageMeter, cine
-from models.resnet import InsResNet50, InsResNet18
+from utils_resnet.utils import AverageMeter, cine
+from utils_resnet.resnet import InsResNet50, InsResNet18
 from datasets.cub_projector import CUBDatasetProj
 from datasets.aircraft_projector import OIDDatasetProj
 import numpy as np
@@ -26,7 +26,6 @@ def parse_option():
     parser.add_argument('--print_freq', type=int, default=10, help='print frequency')
     parser.add_argument('--batch_size', type=int, default=8, help='batch_size')
     parser.add_argument('--num_workers', type=int, default=32, help='num of workers to use')
-    parser.add_argument('--epochs', type=int, default=10, help='number of training epochs')
 
     # model definition
     parser.add_argument('--model', type=str, default='resnet50', 
@@ -39,7 +38,7 @@ def parse_option():
     parser.add_argument('--val_out_size', type=int, default=64, help='output size')
 
     # dataset
-    parser.add_argument('--dataset', type=str, default='CUB', choices=['CUB', 'OID'])
+    parser.add_argument('--dataset', type=str, default='birds', choices=['birds', 'aircrafts'])
 
     # model path and name  
     parser.add_argument('--model_name', type=str, default='feature projector') 
@@ -48,7 +47,7 @@ def parse_option():
     # GPU setting
     parser.add_argument('--gpu', default=None, type=int, help='GPU id to use.')
     # log_path
-    parser.add_argument('--clus_path', default='./data_dir/cub_clusters', type=str, metavar='PATH', help='path to save clustering outputs')
+    parser.add_argument('--clus_path', default='', type=str, metavar='PATH', help='path to save clustering outputs')
     # use hypercolumn or single layer output
     parser.add_argument('--val_use_hypercol', action='store_true', help='use HC as representations during testing')
 
@@ -67,9 +66,9 @@ def main():
         print("Use GPU: {} for training".format(args.gpu))
     torch.manual_seed(0)
 
-    if args.dataset=='CUB':
+    if args.dataset=='birds':
         train_dataset = CUBDatasetProj()
-    elif args.dataset=='OID':
+    elif args.dataset=='aircrafts':
         train_dataset = OIDDatasetProj()
 
     print('Number of training images: %d' % len(train_dataset))
@@ -130,10 +129,9 @@ def forward_cluster(loader,
             feat = feat.reshape(feat.shape[0],feat.shape[1],-1)
             feat = feat.permute(0,2,1)
             feat = feat.cpu().numpy()
-            # import pdb;pdb.set_trace()
 
             for b_i in range(feat.shape[0]):
-                kmeans = KMeans(n_clusters=25, random_state=np.random.randint(0,1000), max_iter=500).fit(feat[b_i])
+                kmeans = KMeans(n_clusters=15, random_state=np.random.randint(0,1000), max_iter=500).fit(feat[b_i])
                 img = kmeans.labels_.reshape(opt.val_out_size,opt.val_out_size)
                 cv2.imwrite(os.path.join(opt.clus_path, im_name[b_i][:-4]+'.png'), img)
  

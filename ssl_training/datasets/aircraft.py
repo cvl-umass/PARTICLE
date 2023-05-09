@@ -5,21 +5,12 @@ import torch.nn as nn
 import torch.utils.data
 import torchvision.transforms
 from torch.utils.data import Dataset
-# import torchvision.transforms.InterpolationMode as InterpolationMode
 import torchfile
 import random
 from PIL import Image
 import numpy as np
 
-im_dir = '/work/osaha_umass_edu/oid-aircraft-beta-1/data/images/aeroplane'
-# seg_dir = '/work/osaha_umass_edu/oid-aircraft-beta-1/fh_masks'
-
-# seg_dir = '/work/osaha_umass_edu/oid-aircraft-beta-1/data_oid/'
-seg_dir = '/work/osaha_umass_edu/CUB_full/oid_trained/'
-# seg_dir = '/work/osaha_umass_edu/oid-aircraft-beta-1/detcon_clus/'
-
-# seg_dir = '/work/osaha_umass_edu/CUB_full/dino_masks/1/'
-
+im_dir = '../data_dir/oid-aircraft-beta-1/data/images/aeroplane/'
 
 resnet_transform = torchvision.transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
@@ -27,12 +18,11 @@ resnet_transform = torchvision.transforms.Normalize(
 
 class OIDDatasetClus(Dataset):
     def __init__(
-            self,
+            self, seg_dir,
             img_size=(224, 224),
     ):  
-        with open("/work/osaha_umass_edu/oid-aircraft-beta-1/train_oid_coarse.txt", 'r') as f:
+        with open("./anno/train_oid.txt", 'r') as f:
             x = f.readlines()
-        # train_dat = torchfile.load('/home/osaha_umass_edu/gitcodes/CoarseSup/Posterior/anno/train.dat')
         self.img_path_list = []
         self.label_path_list = []
         for name in x:
@@ -53,8 +43,7 @@ class OIDDatasetClus(Dataset):
             lbl = np.array(Image.open(lbl_path))
         if len(lbl.shape) == 3:
             lbl = lbl[:, :, 0]
-        # import pdb;pdb.set_trace()
-        lbl = Image.fromarray(lbl.astype('uint8'))#//15)
+        lbl = Image.fromarray(lbl.astype('uint8'))
         im1, m1 = self.transform(im, lbl, 1.0, 0.0)
         im2, m2 = self.transform(im, lbl, 0.1, 0.2)
 
@@ -62,7 +51,6 @@ class OIDDatasetClus(Dataset):
 
     def transform(self, img, mask, g_p, s_p):
         im_shape = (img.size[1], img.size[0])
-        # img = torchvision.transforms.CenterCrop(im_shape)(img)
         mask = torchvision.transforms.Resize(im_shape, interpolation=Image.NEAREST)(mask)
         
         hflip = random.random() < 0.5
@@ -76,12 +64,6 @@ class OIDDatasetClus(Dataset):
         mask_crop = torchvision.transforms.functional.crop(mask, *params)
         img = torchvision.transforms.Resize((224,224), interpolation=Image.BICUBIC)(img_crop)
         mask = torchvision.transforms.Resize((224,224), interpolation=Image.NEAREST)(mask_crop)
-
-        # img = torchvision.transforms.RandomResizedCrop(self.img_size, scale=(0.08, 1.0),
-        #                  ratio=(0.75, 1.3333333333333333), interpolation=Image.BICUBIC)(img)
-        # mask = torchvision.transforms.RandomResizedCrop(self.img_size, scale=(0.08, 1.0),
-        #                  ratio=(0.75, 1.3333333333333333), interpolation=Image.NEAREST)(mask)
-
 
         jitter = random.random() < 0.8
         if jitter:

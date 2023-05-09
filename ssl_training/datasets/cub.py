@@ -10,8 +10,7 @@ import random
 from PIL import Image
 import numpy as np
 
-im_dir = './data_dir/CUB_200_2011/CUB_200_2011/images_extracted/'
-seg_dir = './data_dir/cub_clusters'
+im_dir = '../data_dir/CUB_200_2011/CUB_200_2011/images_extracted/'
 
 resnet_transform = torchvision.transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
@@ -19,7 +18,7 @@ resnet_transform = torchvision.transforms.Normalize(
 
 class CUBDatasetClus(Dataset):
     def __init__(
-            self,
+            self, seg_dir,
             img_size=(224, 224),
     ):
         train_dat = torchfile.load('./anno/train.dat')

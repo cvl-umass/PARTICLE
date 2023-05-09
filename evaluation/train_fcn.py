@@ -30,8 +30,8 @@ def main(args):
 
 
     if args.dataset == "birds":
-        img_path_base = '/home/osaha_umass_edu/PASCUB_Birds/CUB_Parts/images_train'
-        lbl_path_base = '/home/osaha_umass_edu/PASCUB_Birds/CUB_Parts/parts_train'
+        img_path_base = '../data_dir/PASCUB_Birds/CUB_Parts/images_train'
+        lbl_path_base = '../data_dir/PASCUB_Birds/CUB_Parts/parts_train'
 
 
         for file in os.listdir(img_path_base):
@@ -40,8 +40,8 @@ def main(args):
             images.append(img_path)
             labels.append(label_path)
 
-        img_path_base = '/home/osaha_umass_edu/PASCUB_Birds/PASCAL_Parts/images_train'
-        lbl_path_base = '/home/osaha_umass_edu/PASCUB_Birds/PASCAL_Parts/parts_train'
+        img_path_base = '../data_dir/PASCUB_Birds/PASCAL_Parts/images_train'
+        lbl_path_base = '../data_dir/PASCUB_Birds/PASCAL_Parts/parts_train'
 
         for file in os.listdir(img_path_base):
             img_path = os.path.join(img_path_base, file)
@@ -50,10 +50,10 @@ def main(args):
             labels.append(label_path)
     
     elif args.dataset == "aircrafts":
-        img_path_base = "/work/osaha_umass_edu/oid-aircraft-beta-1/data/images/aeroplane/"
-        lbl_path_base = "/work/osaha_umass_edu/oid-aircraft-beta-1/data_oid/"
+        img_path_base = "../data_dir/oid-aircraft-beta-1/data/images/aeroplane/"
+        lbl_path_base = "../data_dir/oid-aircraft-beta-1/data_oid/"
 
-        with open("/work/osaha_umass_edu/oid-aircraft-beta-1/train_oid.txt", 'r') as f:
+        with open("../ssl_training/anno/train_oid.txt", 'r') as f:
             x = f.readlines()
 
         for line in x:
@@ -94,8 +94,12 @@ def main(args):
 
     classifier.cuda()
     classifier.train()
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(classifier.parameters(), lr=0.000001)
+    if args.dataset == "birds":
+        criterion = nn.CrossEntropyLoss()
+    elif args.dataset == "aircrafts":
+        criterion = nn.BCEWithLogitsLoss()
+    
+    optimizer = optim.Adam(classifier.parameters(), lr=0.00001)
 
     resnet_transform = torchvision.transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
