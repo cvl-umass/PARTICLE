@@ -78,7 +78,6 @@ PARTICLE models should give following score on running this code:
 Base SSL | DetCon | DINO
 --- | --- | ---
 Birds | 40.88 | 84.15 
---- | --- | ---
 Aircrafts | 43.99 | 73.59
 
 ### Few-Shot Part Segmentation
@@ -98,7 +97,6 @@ PARTICLE models should give following score on running this code:
 Base SSL | DetCon | DINO
 --- | --- | ---
 Birds | 49.23 | 50.59
---- | --- | ---
 Aircrafts | 58.95 | 61.68
 
 
