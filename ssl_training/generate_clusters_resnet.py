@@ -47,7 +47,7 @@ def parse_option():
     # GPU setting
     parser.add_argument('--gpu', default=None, type=int, help='GPU id to use.')
     # log_path
-    parser.add_argument('--save_dir', default='', type=str, metavar='PATH', help='path to save clustering outputs')
+    parser.add_argument('--save_dir', default='./clus', type=str, metavar='PATH', help='path to save clustering outputs')
     # use hypercolumn or single layer output
     parser.add_argument('--val_use_hypercol', action='store_true', help='use HC as representations during testing')
 
@@ -88,19 +88,6 @@ def main():
     else:
         raise NotImplementedError('model not supported {}'.format(args.model))
     
-
-    # load pretrained ssl 
-    if args.trained_model_path != 'none':
-        print('==> loading pre-trained model')
-        ckpt = torch.load(args.trained_model_path, map_location='cpu')
-        state_dict = ckpt['model']
-        for key in list(state_dict.keys()):
-            state_dict['encoder.'+key] = state_dict.pop(key)
-        model.load_state_dict(state_dict, strict=False)
-        print('==> done')
-    else:
-        print('==> use randomly initialized model')
-
     model = nn.DataParallel(model)
 
     model = model.cuda()

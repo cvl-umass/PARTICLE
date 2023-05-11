@@ -16,8 +16,6 @@ class MLP(nn.Sequential):
 class Encoder(nn.Sequential):
     def __init__(self, backbone: str = "resnet50", pretrained: bool = False) -> None:
         model = getattr(torchvision.models, backbone)(pretrained)
-        state_dict = torch.load('./pretrained_models/resnet50_detcon.pth')['model']
-        model.load_state_dict(state_dict,strict=False)
         self.emb_dim = model.fc.in_features
         model.fc = nn.Identity()
         model.avgpool = nn.Identity()
@@ -94,6 +92,8 @@ class Network(nn.Module):
     ) -> None:
         super().__init__()
         self.encoder = Encoder(backbone, pretrained)
+        state_dict = torch.load('./pretrained_models/resnet50_detcon.pth')['state_dict']
+        self.encoder.load_state_dict(state_dict,strict=True)
         self.projector = MLP(self.encoder.emb_dim, hidden_dim, output_dim)
         self.mask_pool = MaskPooling(num_classes, num_samples, downsample)
 

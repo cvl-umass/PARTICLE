@@ -192,8 +192,9 @@ def resnet50(pretrained=False, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
-    state_dict = torch.load('./pretrained_models/resnet50_detcon.pth')['model']
-    model.load_state_dict(state_dict,strict=False)
+    model = nn.Sequential(*list(model.children()))
+    state_dict = torch.load('./pretrained_models/resnet50_detcon.pth')['state_dict']
+    model.load_state_dict(state_dict,strict=True)
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
     return model
