@@ -63,6 +63,9 @@ python -m torch.distributed.launch --nproc_per_node=8 train_particle_vit.py --da
 ```
 
 ## PARTICLE Evaluation
+```
+cd evaluation
+```
 
 ### Linear Evaluation
 Test on classifcation using the checkpoints obtained by training PARTICLE:
