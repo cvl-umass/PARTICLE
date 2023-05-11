@@ -179,7 +179,7 @@ class AverageMeter(object):
 class DetConB(nn.Module):
     def __init__(
         self,
-        num_classes: int = 25,
+        num_classes: int = 15,
         num_samples: int = 10,
         backbone: str = "resnet50",
         pretrained: bool = False,

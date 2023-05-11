@@ -47,7 +47,7 @@ def parse_option():
     # GPU setting
     parser.add_argument('--gpu', default=None, type=int, help='GPU id to use.')
     # log_path
-    parser.add_argument('--clus_path', default='', type=str, metavar='PATH', help='path to save clustering outputs')
+    parser.add_argument('--save_dir', default='', type=str, metavar='PATH', help='path to save clustering outputs')
     # use hypercolumn or single layer output
     parser.add_argument('--val_use_hypercol', action='store_true', help='use HC as representations during testing')
 
@@ -110,7 +110,7 @@ def main():
 def forward_cluster(loader, 
                     model,  # pretrained ssl
                     opt):
-    cine(opt.clus_path)
+    cine(opt.save_dir)
     batch_time = AverageMeter()
     data_time = AverageMeter()
 
@@ -133,7 +133,7 @@ def forward_cluster(loader,
             for b_i in range(feat.shape[0]):
                 kmeans = KMeans(n_clusters=15, random_state=np.random.randint(0,1000), max_iter=500).fit(feat[b_i])
                 img = kmeans.labels_.reshape(opt.val_out_size,opt.val_out_size)
-                cv2.imwrite(os.path.join(opt.clus_path, im_name[b_i][:-4]+'.png'), img)
+                cv2.imwrite(os.path.join(opt.save_dir, im_name[b_i][:-4]+'.png'), img)
  
             del(feat)
             batch_time.update(time.time() - end)

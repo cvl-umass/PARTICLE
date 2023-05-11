@@ -42,7 +42,7 @@ cd ssl_training
 First generate clusters using:
 
 ```
-python generate_clusters.py --dataset <dataset type - “birds” or “aircrafts”> —clus_path <dir to save part cluster masks>
+python generate_clusters_resnet.py --dataset <dataset type - “birds” or “aircrafts”> --save_dir <dir to save part cluster masks>
 ```
 
 Next train ResNet PARTICLE:
@@ -54,7 +54,7 @@ python train_particle_resnet.py --dataset <dataset type - “birds” or “airc
 
 First generate clusters using:
 ```
-todo
+python generate_clusters_vit.py --dataset <dataset type - “birds” or “aircrafts”> --save_dir <dir to save part cluster masks>
 ```
 
 Next train ViT PARTICLE
