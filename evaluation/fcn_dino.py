@@ -55,7 +55,7 @@ class DinoSeg(nn.Module):
 
 
     def forward(self, x):
-        x, att = self.backbone.get_intermediate_layers(x, 4)
+        x, att, _ = self.backbone.get_intermediate_layers(x, 4)
         x = x[-1][:,0][:,1:]
         x = x.permute(0,2,1)
         x = x.reshape(-1,64,28,28)

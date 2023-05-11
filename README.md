@@ -64,16 +64,22 @@ python -m torch.distributed.launch --nproc_per_node=8 train_particle_vit.py --da
 
 ## PARTICLE Evaluation
 
+### Linear Evaluation
+Test on classifcation using the checkpoints obtained by training PARTICLE:
+```
+python test_linear.py --arch <architecture - “resnet50” or "vit_small"> --dataset <dataset type - “birds” or “aircrafts”> --pretrained_weights <trained particle checkpoint>
+```
+
 ### Few-Shot Part Segmentation
 
-Train on segmentation downstream task using the checkpoint obtained above:
+Train on segmentation downstream task using the checkpoints obtained by training PARTICLE:
 ```
-python train_fcn.py —arch <architecture - “res50” or “dino”> —dataset <dataset type - “birds” or “aircrafts”> —ckpt <trained ssl checkpoint in previous step> —save_path <path to save fcn set models”
+python train_fcn.py —-arch <architecture - “res50” or “dino”> —-dataset <dataset type - “birds” or “aircrafts”> —-ckpt <trained particle checkpoint> —-save_path <path to save fcn set models”
 ```
 
 Find cross-validation mIoU using:
 ```
-python test_miou.py —arch <architecture - “res50” or “dino”> —dataset <dataset type - “birds” or “aircrafts”> —ckpt_dir <folder of seg ckpts from previous step >
+python test_miou.py —-arch <architecture - “res50” or “dino”> —-dataset <dataset type - “birds” or “aircrafts”> —-ckpt_dir <folder of seg ckpts from previous step >
 ```
 
 

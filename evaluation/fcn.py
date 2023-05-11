@@ -148,23 +148,15 @@ class ResNet(nn.Module):
 
     def forward(self, x):
         x = self.res(x)
-
         z = self.decoder(x)
-
         return z
-
-def fcn(pretrained=False, nparts=15):
-    model = ResNet(BasicBlock, [3, 4, 6, 3], nparts=nparts)
-
-    if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet34']), strict=False)
-
-    return model
+    
+    def get_encoder_output(self, x):
+        x = self.res(x)
+        return x
 
 def fcn_res50(pretrained=False, nparts=15):
     model = ResNet(Bottleneck, [3, 4, 6, 3], nparts=nparts)
-
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls['resnet50']), strict=False)
-
-    return model #nn.Sequential(*list(model.children())) #model
+    return model

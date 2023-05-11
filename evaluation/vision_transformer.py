@@ -209,7 +209,7 @@ class VisionTransformer(nn.Module):
     def forward(self, x):
         x = self.prepare_tokens(x)
         for blk in self.blocks:
-            x = blk(x)
+            x,_,_ = blk(x)
         x = self.norm(x)
         return x[:, 0]
 
@@ -217,7 +217,7 @@ class VisionTransformer(nn.Module):
         x = self.prepare_tokens(x)
         for i, blk in enumerate(self.blocks):
             if i < len(self.blocks) - 1:
-                x = blk(x)
+                x,_,_ = blk(x)
             else:
                 # return attention of the last block
                 return blk(x, return_attention=True)
@@ -225,15 +225,16 @@ class VisionTransformer(nn.Module):
     def get_intermediate_layers(self, x, n=1):
         x = self.prepare_tokens(x)
         # we return the output tokens from the `n` last blocks
+        output_keys = []
         output = []
         attns = []
         for i, blk in enumerate(self.blocks):
             x, attn, k  = blk(x)
             if len(self.blocks) - i <= n:
-                #output.append(self.norm(x))
-                output.append(k)
+                output.append(self.norm(x))
+                output_keys.append(k)
                 attns.append(attn)
-        return output, attns
+        return output_keys, attns, output
 
 
 def vit_tiny(patch_size=16, **kwargs):
