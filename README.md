@@ -59,7 +59,7 @@ python generate_clusters_vit.py --dataset <dataset type - “birds” or “airc
 
 Next train ViT PARTICLE
 ```
-python -m torch.distributed.launch --nproc_per_node=8 train_particle_vit.py --dataset <dataset type - “birds” or “aircrafts”> --seg_dir <dir of masks generated in previous step> —output_dir <path to save models>
+python -m torch.distributed.launch --nproc_per_node=8 train_particle_vit.py --dataset <dataset type - “birds” or “aircrafts”> --seg_dir <dir of masks generated in previous step> —-output_dir <path to save models>
 ```
 
 ## PARTICLE Evaluation
@@ -73,6 +73,14 @@ Test on classifcation using the checkpoints obtained by training PARTICLE:
 python test_linear.py --arch <architecture - “resnet50” or "vit_small"> --dataset <dataset type - “birds” or “aircrafts”> --pretrained_weights <trained particle checkpoint>
 ```
 
+PARTICLE models should give following score on running this code:
+
+Base SSL | DetCon | DINO
+--- | --- | ---
+Birds | 40.88 | 84.15 
+--- | --- | ---
+Aircrafts | 43.99 | 73.59
+
 ### Few-Shot Part Segmentation
 
 Train on segmentation downstream task using the checkpoints obtained by training PARTICLE:
@@ -84,5 +92,13 @@ Find cross-validation mIoU using:
 ```
 python test_miou.py —-arch <architecture - “res50” or “dino”> —-dataset <dataset type - “birds” or “aircrafts”> —-ckpt_dir <folder of seg ckpts from previous step >
 ```
+
+PARTICLE models should give following score on running this code:
+
+Base SSL | DetCon | DINO
+--- | --- | ---
+Birds | 49.23 | 50.59
+--- | --- | ---
+Aircrafts | 58.95 | 61.68
 
 

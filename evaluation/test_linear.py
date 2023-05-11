@@ -26,7 +26,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from pytorch_pretrained_vit import ViT
 
-im_dir = '../data_dir/CUB_200_2011/images_extracted/1/'
+im_dir = '../data_dir/CUB_200_2011/images_extracted/'
 
 
 class ImageLabelDataset(Dataset):
