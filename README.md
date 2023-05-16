@@ -29,7 +29,7 @@ for folder in *; do; mv $folder/* ../images_extracted/.; done
 
 -> Download OID dataset from [here](https://www.robots.ox.ac.uk/~vgg/data/oid/) in data_dir
 
--> Download pretained checkpoints from [here](https://drive.google.com/drive/folders/1EqAiUKdKc_jF-DaTWyCWHh7h6KNEU7UJ?usp=sharing) into pretrained_models folder inside ssl_training folder
+-> Download pretained checkpoints from [here](https://drive.google.com/drive/folders/1O0vPPOD38YqojOPXq60I6IWUKHIsBsss?usp=sharing) into pretrained_models folder inside ssl_training folder
 
 
 ## PARTICLE Training
